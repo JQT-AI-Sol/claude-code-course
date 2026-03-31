@@ -29,8 +29,64 @@ FILES = [
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
+def parse_rich_text(text: str) -> list:
+    """Markdownのインライン書式をNotionのrich_textに変換する"""
+    parts = []
+    # パターン: **bold**, *italic*, `code`, [text](url)
+    pattern = r'(\*\*(.+?)\*\*|`([^`]+)`|\[([^\]]+)\]\(([^)]+)\)|\*([^*]+)\*)'
+    last_end = 0
+
+    for m in re.finditer(pattern, text):
+        # マッチ前のプレーンテキスト
+        if m.start() > last_end:
+            plain = text[last_end:m.start()]
+            if plain:
+                parts.append({"type": "text", "text": {"content": plain}})
+
+        if m.group(2):  # **bold**
+            parts.append({
+                "type": "text",
+                "text": {"content": m.group(2)},
+                "annotations": {"bold": True},
+            })
+        elif m.group(3):  # `code`
+            parts.append({
+                "type": "text",
+                "text": {"content": m.group(3)},
+                "annotations": {"code": True},
+            })
+        elif m.group(4) and m.group(5):  # [text](url)
+            parts.append({
+                "type": "text",
+                "text": {"content": m.group(4), "link": {"url": m.group(5)}},
+            })
+        elif m.group(6):  # *italic*
+            parts.append({
+                "type": "text",
+                "text": {"content": m.group(6)},
+                "annotations": {"italic": True},
+            })
+        last_end = m.end()
+
+    # 残りのテキスト
+    if last_end < len(text):
+        remaining = text[last_end:]
+        if remaining:
+            parts.append({"type": "text", "text": {"content": remaining}})
+
+    # マッチがなかった場合
+    if not parts:
+        parts.append({"type": "text", "text": {"content": text}})
+
+    # 2000文字制限を適用
+    for p in parts:
+        p["text"]["content"] = p["text"]["content"][:2000]
+
+    return parts
+
+
 def md_to_notion_blocks(md_text: str) -> list:
-    """MarkdownをNotionブロックに変換する（簡易版）"""
+    """MarkdownをNotionブロックに変換する"""
     blocks = []
     lines = md_text.split("\n")
     i = 0
@@ -79,19 +135,19 @@ def md_to_notion_blocks(md_text: str) -> list:
             blocks.append({
                 "object": "block",
                 "type": "heading_1",
-                "heading_1": {"rich_text": [{"type": "text", "text": {"content": line[2:].strip()[:2000]}}]}
+                "heading_1": {"rich_text": parse_rich_text(line[2:].strip())}
             })
         elif line.startswith("## "):
             blocks.append({
                 "object": "block",
                 "type": "heading_2",
-                "heading_2": {"rich_text": [{"type": "text", "text": {"content": line[3:].strip()[:2000]}}]}
+                "heading_2": {"rich_text": parse_rich_text(line[3:].strip())}
             })
         elif line.startswith("### "):
             blocks.append({
                 "object": "block",
                 "type": "heading_3",
-                "heading_3": {"rich_text": [{"type": "text", "text": {"content": line[4:].strip()[:2000]}}]}
+                "heading_3": {"rich_text": parse_rich_text(line[4:].strip())}
             })
 
         # コールアウト（> 💡 で始まる行）
@@ -106,7 +162,7 @@ def md_to_notion_blocks(md_text: str) -> list:
                 "object": "block",
                 "type": "callout",
                 "callout": {
-                    "rich_text": [{"type": "text", "text": {"content": content[:2000]}}],
+                    "rich_text": parse_rich_text(content),
                     "icon": {"type": "emoji", "emoji": "💡"},
                 }
             })
@@ -125,7 +181,7 @@ def md_to_notion_blocks(md_text: str) -> list:
                 "object": "block",
                 "type": "callout",
                 "callout": {
-                    "rich_text": [{"type": "text", "text": {"content": content[:2000]}}],
+                    "rich_text": parse_rich_text(content),
                     "icon": {"type": "emoji", "emoji": "🔒"},
                 }
             })
@@ -144,7 +200,7 @@ def md_to_notion_blocks(md_text: str) -> list:
                 "object": "block",
                 "type": "callout",
                 "callout": {
-                    "rich_text": [{"type": "text", "text": {"content": content[:2000]}}],
+                    "rich_text": parse_rich_text(content),
                     "icon": {"type": "emoji", "emoji": "📎"},
                 }
             })
@@ -163,7 +219,7 @@ def md_to_notion_blocks(md_text: str) -> list:
                 "object": "block",
                 "type": "callout",
                 "callout": {
-                    "rich_text": [{"type": "text", "text": {"content": content[:2000]}}],
+                    "rich_text": parse_rich_text(content),
                     "icon": {"type": "emoji", "emoji": "💡"},
                 }
             })
@@ -178,7 +234,7 @@ def md_to_notion_blocks(md_text: str) -> list:
                 "object": "block",
                 "type": "to_do",
                 "to_do": {
-                    "rich_text": [{"type": "text", "text": {"content": text[:2000]}}],
+                    "rich_text": parse_rich_text(text),
                     "checked": checked,
                 }
             })
@@ -190,7 +246,7 @@ def md_to_notion_blocks(md_text: str) -> list:
                 "object": "block",
                 "type": "bulleted_list_item",
                 "bulleted_list_item": {
-                    "rich_text": [{"type": "text", "text": {"content": text[:2000]}}],
+                    "rich_text": parse_rich_text(text),
                 }
             })
 
@@ -201,7 +257,7 @@ def md_to_notion_blocks(md_text: str) -> list:
                 "object": "block",
                 "type": "numbered_list_item",
                 "numbered_list_item": {
-                    "rich_text": [{"type": "text", "text": {"content": text[:2000]}}],
+                    "rich_text": parse_rich_text(text),
                 }
             })
 
@@ -215,8 +271,22 @@ def md_to_notion_blocks(md_text: str) -> list:
 
         # 画像
         elif line.startswith("!["):
-            # ![alt](path) 形式 — ローカル画像はスキップ
-            pass
+            # ![alt](path) 形式 — GitHub raw URL に変換して image block を生成
+            m = re.match(r"!\[([^\]]*)\]\(([^)]+)\)", line)
+            if m:
+                alt_text = m.group(1)
+                img_path = m.group(2)
+                # ローカルパスを GitHub raw URL に変換
+                github_url = f"https://raw.githubusercontent.com/JQT-AI-Sol/claude-code-course/main/{img_path}"
+                blocks.append({
+                    "object": "block",
+                    "type": "image",
+                    "image": {
+                        "type": "external",
+                        "external": {"url": github_url},
+                        "caption": [{"type": "text", "text": {"content": alt_text}}] if alt_text else [],
+                    }
+                })
 
         # イタリック（キャプション）
         elif line.startswith("*") and line.endswith("*") and not line.startswith("**"):
@@ -240,7 +310,7 @@ def md_to_notion_blocks(md_text: str) -> list:
                 "object": "block",
                 "type": "paragraph",
                 "paragraph": {
-                    "rich_text": [{"type": "text", "text": {"content": text[:2000]}}],
+                    "rich_text": parse_rich_text(text),
                 }
             })
 
@@ -256,7 +326,7 @@ def md_to_notion_blocks(md_text: str) -> list:
                     "object": "block",
                     "type": "paragraph",
                     "paragraph": {
-                        "rich_text": [{"type": "text", "text": {"content": text[:2000]}}],
+                        "rich_text": parse_rich_text(text),
                     }
                 })
 
