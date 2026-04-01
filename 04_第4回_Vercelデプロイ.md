@@ -135,11 +135,14 @@ GitHub（コード）→ Vercel（自動ビルド）→ URL 発行 → 公開
 ![Vercel 公式サイト](screenshots/04_vercel_top.png)
 *Vercel 公式サイト。「Start Deploying」または右上の「Sign Up」からアカウント作成に進みます*
 
-2. 「Sign Up」→ **GitHub アカウントでログイン**
-3. ログイン後のダッシュボードに「Add New...」または「Import Project」ボタンが表示されます。クリックして GitHub の `todo-app` リポジトリを選択します
-4. 設定画面:
-   - Framework Preset: Next.js（自動検出されるはず）
-   - Root Directory: そのまま
+2. 「Sign Up」をクリック
+3. 「Continue with GitHub」を選択（第3回で作った GitHub アカウントを使います）
+4. GitHub の認証画面が出たら「Authorize Vercel」をクリック
+5. ダッシュボードが表示されたら、「Add New...」→「Project」をクリック
+6. 「Import Git Repository」で GitHub の `todo-app` リポジトリを選択
+7. 設定画面:
+   - 「Framework Preset」が「Next.js」になっていることを確認（自動検出されます）
+   - 「Root Directory」はそのまま（空欄でOK）
    - **Environment Variables**（環境変数）: ここが重要
 
 **環境変数の設定:**
