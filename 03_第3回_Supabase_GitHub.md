@@ -16,6 +16,8 @@
 TODO アプリにデータベース（アプリのデータを保管する仕組み）を接続し、ブラウザを閉じてもデータが残るようにする。
 さらに GitHub（コードのバックアップ・共有サービス）でコードをバックアップし、壊しても戻せる安心感を手に入れる。
 
+![Supabase導入のBefore/After](images/supabase-data-saved.png)
+
 ![Supabase と GitHub の役割](images/supabase-github-roles.png)
 
 ---
@@ -175,7 +177,9 @@ Supabase の情報:
 - Anon Key: （コピーした anon public キー）
 
 やってほしいこと:
-1. プロジェクトのルートフォルダ（todo-app フォルダの直下）に .env.local ファイルを作成して環境変数を設定
+1. プロジェクトのルートフォルダ（下図参照）に .env.local ファイルを作成して環境変数を設定
+
+![.env.localの配置場所](images/env-local-structure.png)
 2. Supabase クライアントライブラリをインストール
 3. 今のメモリ保存を Supabase 保存に切り替え
 4. タスクの追加・完了切替・削除が DB に反映されるようにする（CRUD操作）
