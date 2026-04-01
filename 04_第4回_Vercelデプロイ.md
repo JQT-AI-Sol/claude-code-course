@@ -107,6 +107,8 @@ localhost:3000              https://my-todo-app.vercel.app
 
 ### Vercel を選ぶ理由
 
+Netlify や Cloudflare Pages など他のホスティングサービスもありますが、Vercel は Next.js の開発元が運営しているため相性が最強です。
+
 - Next.js の開発元が運営（相性最強）
 - Hobby プラン（無料枠）で個人利用には十分
 - GitHub と連携すると push するだけで自動デプロイ（CI/CD）
