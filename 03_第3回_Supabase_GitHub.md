@@ -117,6 +117,10 @@ TODO アプリにデータベース（アプリのデータを保管する仕組
 
 1. https://github.com にアクセス
 2. 「Sign up」をクリック
+
+![GitHub サインアップフォーム](screenshots/A3_github_signup.png)
+*GitHub アカウント作成画面。メールアドレス、パスワード、ユーザー名を入力します*
+
 3. メールアドレスを入力
 4. パスワードを設定（15文字以上、または8文字以上で数字と小文字を含む）
 5. ユーザー名を決める（英数字とハイフンのみ。後から変更可能）
@@ -144,6 +148,9 @@ TODO アプリにデータベース（アプリのデータを保管する仕組
 *Supabase 公式サイト。「Start your project」ボタンからアカウント作成に進みます*
 
 2. 「Start your project」→ **GitHub アカウントでログイン**（Step 1 で作ったアカウントを使います）
+
+![Supabase ログイン画面](screenshots/A7_supabase_login.png)
+*Supabase のログイン画面。「Continue with GitHub」をクリックして GitHub アカウントでログインします*
 3. 「New Project」をクリック
 4. 以下を入力:
    - Organization（グループ名のようなもの。個人利用ならデフォルトのままでOK）
@@ -174,6 +181,9 @@ Supabase のダッシュボードで TODO テーブルを作る SQL を教えて
 
 生成された SQL を Supabase ダッシュボードの「SQL Editor」に貼り付けて実行します。具体的には、Supabaseダッシュボード左メニューの「SQL Editor」をクリック → 「New query」をクリック → 以下のSQLを貼り付け → 右上の「Run」ボタンをクリックしてください。
 
+![Supabase SQL Editor](screenshots/D1_supabase_sql_editor.png)
+*SQL Editor 画面。SQL を貼り付けて右上の「Run」ボタンをクリックすると実行されます*
+
 **2-3. 環境変数の取得**
 
 > 💡 **環境変数って何？**
@@ -185,6 +195,9 @@ Supabase のダッシュボードで TODO テーブルを作る SQL を教えて
 Supabase ダッシュボード → **Settings → API Keys**（または画面上部の「**Connect**」ボタン）から以下をコピー:
 - `Project URL`
 - `anon public` キー
+
+![Supabase API Keys](screenshots/D3_supabase_api_keys.png)
+*API Settings 画面。「Project URL」と「anon public」キーの2つをコピーします。service_role キーは絶対に使わないでください*
 
 コピーした値は `https://xxxx.supabase.co` のような形式（Project URL）、`eyJhbGci...` のような長い文字列（anon key）になります。
 
@@ -226,6 +239,9 @@ Supabase の情報:
 - タスクを追加 → ブラウザを更新 → **データが残っている**
 - Supabaseダッシュボード左側メニューにある「Table Editor」でもデータが見える
 - タスクを削除 → Supabase 上からも消えている
+
+![Supabase Table Editor](screenshots/D2_supabase_table_editor.png)
+*Table Editor 画面。追加したタスクが表示されていれば、Supabase への接続は成功です*
 
 ---
 
@@ -289,6 +305,9 @@ Claude Code に指示:
 **確認ポイント:**
 - GitHub のリポジトリページでファイルが見える
 - `.env.local` がアップロードされていない（ここが最重要！）
+
+![GitHub リポジトリ画面](screenshots/D4_github_repo.png)
+*GitHub のリポジトリ画面。ファイル一覧に `.env.local` が無いことを確認してください*
 
 ---
 

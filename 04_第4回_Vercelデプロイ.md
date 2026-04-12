@@ -137,9 +137,15 @@ GitHub（コード）→ Vercel（自動ビルド）→ URL 発行 → 公開
 
 2. 「Sign Up」をクリック
 3. 「Continue with GitHub」を選択（第3回で作った GitHub アカウントを使います）
+
+![Vercel ログイン画面](screenshots/A10_vercel_login.png)
+*Vercel のログイン画面。「Continue with GitHub」をクリックして GitHub アカウントでログインします*
 4. GitHub の認証画面が出たら「Authorize Vercel」をクリック
 5. ダッシュボードが表示されたら、「Add New...」→「Project」をクリック
 6. 「Import Git Repository」で GitHub の `todo-app` リポジトリを選択
+
+![Vercel Import 画面](screenshots/D7_vercel_import.png)
+*Import Git Repository 画面。`todo-app` の横にある「Import」ボタンをクリックします*
 7. 設定画面:
    - 「Framework Preset」が「Next.js」になっていることを確認（自動検出されます）
    - 「Root Directory」はそのまま（空欄でOK）
@@ -156,9 +162,15 @@ GitHub（コード）→ Vercel（自動ビルド）→ URL 発行 → 公開
 3. 「Add」をクリック
 4. 同様に `NEXT_PUBLIC_SUPABASE_ANON_KEY` も追加
 
+![Vercel 環境変数設定](screenshots/D8_vercel_env_vars.png)
+*環境変数の設定画面。Supabase の URL と Key を入力し、「Deploy」をクリックします*
+
 5. 「Deploy」をクリック
 
 **1-2分待つとデプロイ完了。あなた専用の URL が発行されます。**
+
+![Vercel デプロイ完了](screenshots/D9_vercel_deploy_success.png)
+*デプロイ完了画面。🎉 が表示され、あなた専用の URL が発行されます*
 
 ---
 
