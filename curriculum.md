@@ -25,8 +25,10 @@
 │    第3回 Supabase + GitHub                        │
 │    第4回 Vercel デプロイ                            │
 │                                                   │
-│  応用（単発）                                      │
-│    Skills 入門 / MCP 入門 / etc.                   │
+│  応用（単発）※基本コース修了者向け                   │
+│    応用1: VSCode で Git/GitHub 入門                │
+│    応用2: Google Drive MCP セキュリティ入門         │
+│    Skills 入門 / etc.                              │
 ├─────────────────────────────────────────────────┤
 │  MENTA（伴走型メンター）                            │
 │  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  │
@@ -178,6 +180,68 @@ MENTA 伴走プラン（月額 15,000〜30,000円）
 - ビルドエラー対処法
 - 無料枠の制限事項
 - 独自ドメインの取得・設定方法
+
+---
+
+## 応用コース（単発）— ココナラ
+
+基本コース修了者または Claude Code を既に使っている方向けの単発講座。
+
+### 応用1: VSCode で Git/GitHub 入門（90分）
+
+**前提**: 基本コース第3回まで修了（GitHub アカウント・リポジトリ作成済み）
+
+**ゴール**: VSCode の GUI で Git 操作ができるようになり、ブランチ・Pull Request の概念を理解する
+
+**講義（10分）**
+- ブランチの概念（「本の原稿のコピーで試し書き」）
+- Pull Request の概念（「変更の稟議書」）
+- CLI と GUI の使い分け
+
+**ハンズオン（65分）**
+- VSCode Source Control パネルでステージング・コミット・差分確認
+- Git Graph 拡張機能でコミット履歴を可視化
+- ブランチを作成して機能を追加（VSCode GUI で完結）
+- GitHub 上で Pull Request を作成・マージ
+- Claude Code の /commit スキルと git 安全機構の紹介
+
+**まとめ（10分）**
+
+**Notion 教材（自習用・辞書）**
+- VSCode Source Control パネル操作ガイド
+- Git Graph の見方ガイド
+- ブランチ命名規則チートシート
+- Pull Request テンプレート
+
+---
+
+### 応用2: Google Drive MCP セキュリティ入門（90分）
+
+**前提**: Claude Code を業務で使い始めた人（基本コース修了者が望ましい）
+
+**ゴール**: MCP の仕組みを理解し、Google Drive に読み取り専用で安全に接続する。4 層のセキュリティモデルを実践する
+
+**講義（20分）**
+- MCP の仕組み（ローカル実行、stdio トランスポート）
+- Google Drive MCP の具体的な機能
+- セキュリティ 4 層防御モデル
+
+**ハンズオン（55分）**
+- MCP の仕組みの確認（claude mcp list）
+- Google Drive MCP のインストールと OAuth 設定
+- OAuth Scope の制限（drive.readonly）
+- Claude Code permissions の設定（deny/ask/allow）
+- CLAUDE.md へのルール追加
+- 読み取り専用接続テスト（検索・読み取り・削除拒否の確認）
+
+**まとめ（10分）**
+
+**Notion 教材（自習用・辞書）**
+- MCP 基本概念ガイド
+- Google Drive MCP セットアップ手順書
+- settings.json permissions 設定リファレンス
+- 「やっていいこと・ダメなこと」チェックリスト
+- Google Workspace 管理者向けセキュリティガイド（管理職向け）
 
 ---
 
