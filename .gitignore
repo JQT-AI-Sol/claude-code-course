@@ -1,0 +1,21 @@
+# Claude Code ローカル設定
+.claude/
+
+# Node
+node_modules/
+
+# 環境変数
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# エディタ
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.pyc
