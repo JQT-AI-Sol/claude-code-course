@@ -28,6 +28,7 @@
 │  応用（単発）※基本コース修了者向け                   │
 │    応用1: VSCode で Git/GitHub 入門                │
 │    応用2: Google Drive MCP セキュリティ入門         │
+│    応用3: Claude Code で GAS 開発入門（Clasp）     │
 │    Skills 入門 / etc.                              │
 ├─────────────────────────────────────────────────┤
 │  MENTA（伴走型メンター）                            │
@@ -215,33 +216,69 @@ MENTA 伴走プラン（月額 15,000〜30,000円）
 
 ---
 
-### 応用2: Google Drive MCP セキュリティ入門（90分）
+### 応用2: Claude × Google Drive セキュリティ入門（90分）
 
-**前提**: Claude Code を業務で使い始めた人（基本コース修了者が望ましい）
+**前提**: Claude.ai を業務で使い始めた人（基本コース修了者が望ましい）
 
-**ゴール**: MCP の仕組みを理解し、Google Drive に読み取り専用で安全に接続する。4 層のセキュリティモデルを実践する
+**ゴール**: Claude.ai の Google Drive コネクタを安全に使う方法を理解し、3 層セキュリティモデルを実践する
 
 **講義（20分）**
-- MCP の仕組み（ローカル実行、stdio トランスポート）
-- Google Drive MCP の具体的な機能
-- セキュリティ 4 層防御モデル
+- Claude.ai コネクタの仕組みと Google Drive の仕様（読み取り専用）
+- データの扱い（Anthropic サーバーで処理、モデル学習には不使用）
+- セキュリティ 3 層防御モデル（Google 権限 / Incognito チャット / 組織管理）
 
 **ハンズオン（55分）**
-- MCP の仕組みの確認（claude mcp list）
-- Google Drive MCP のインストールと OAuth 設定
-- OAuth Scope の制限（drive.readonly）
-- Claude Code permissions の設定（deny/ask/allow）
-- CLAUDE.md へのルール追加
-- 読み取り専用接続テスト（検索・読み取り・削除拒否の確認）
+- Google Drive コネクタの接続（ワンクリック）
+- 読み取りテスト（検索・要約）と削除不可の確認
+- Google アカウントの権限管理（myaccount.google.com）
+- Incognito チャットで機密ファイルを安全に扱う
+- 補足: Sheets 編集が必要な場合の gog CLI 紹介
 
 **まとめ（10分）**
 
 **Notion 教材（自習用・辞書）**
-- MCP 基本概念ガイド
-- Google Drive MCP セットアップ手順書
-- settings.json permissions 設定リファレンス
+- Claude.ai コネクタ設定ガイド
 - 「やっていいこと・ダメなこと」チェックリスト
+- Incognito チャット活用ガイド
+- IT 部門への相談テンプレート
 - Google Workspace 管理者向けセキュリティガイド（管理職向け）
+
+---
+
+### 応用3: Claude Code で GAS 開発入門（Clasp セットアップ編）（90分）
+
+**前提**: 基本コース第1〜2回修了（Node.js・Claude Code が動く）、Google アカウント所有
+
+**ゴール**: Clasp（Google 公式 CLI）を PC にセットアップし、Claude Code で書いた GAS を `clasp push` で Google に送り、勤怠記録スプレッドシートを自動生成できるようになる
+
+**講義（15分）**
+- GAS（Google Apps Script）とは -- Google 版の VBA
+- 従来のブラウザエディタ開発の限界
+- Clasp とは -- ローカル ⇄ Google の同期ツール
+- Claude Code × Clasp の組み合わせメリット
+
+**ハンズオン（65分）**
+- Node.js 22 以上へのアップグレード確認
+- `npm install -g @google/clasp`
+- Apps Script API の有効化（`script.google.com/home/usersettings`）
+- `clasp login` で Google 連携
+- `clasp create --title "勤怠記録ジェネレーター" --type standalone`
+- Claude Code に指示して勤怠表生成関数を作成
+- `clasp push` → スクリプトエディタで実行 → Drive で成果物確認
+- 追い指示で書式変更 → 再 push の往復体験
+- `clasp pull` で Google 側の変更を取り込む体験
+
+**まとめ（10分）**
+- `clasp clone` で既存シートに紐付ける運用
+- トリガー（定期実行）で完全自動化する世界観
+- 応用テーマ（Gmail 自動化、Form → Slack 連携、AI API 連携）
+
+**Notion 教材（自習用・辞書）**
+- Clasp コマンドチートシート
+- 認証トラブル対処集
+- `.clasp.json` / `appsscript.json` の読み方
+- GAS 指示文テンプレート10選
+- 会社利用時の IT 部門相談テンプレート
 
 ---
 
