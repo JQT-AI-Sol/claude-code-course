@@ -31,6 +31,9 @@ VSCode の画面操作だけで「ブランチ作成 → コード変更 → コ
 | GitHub Pull Request ガイド | https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests |
 | GitHub Flow について | https://docs.github.com/en/get-started/using-github/github-flow |
 | VSCode 拡張機能マーケットプレイス | https://marketplace.visualstudio.com/vscode |
+| Protected branches（main を守る設定） | https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches |
+| CODEOWNERS の書き方 | https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners |
+| マージ方式（Squash / Rebase / Merge） | https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/about-pull-request-merges |
 
 ---
 
@@ -349,6 +352,131 @@ Claude Code には Git 操作で危険なことをしないための安全機構
 
 ---
 
+## 補足: チーム開発でよく使う応用テクニック（読み物・10分）
+
+> **このセクションの位置付け:** Step 1-5 は「一人でも安全に開発する」基本フローでした。ここからは「複数人で同じリポジトリを触る」場合に必要になる作法を、5つだけ紹介します。手は動かしません。「将来チームに入ったとき、上司や同僚が話している言葉の意味がわかる」レベルを目指します。
+
+### 1. ブランチ戦略の3パターン
+
+チームによって「ブランチをどう運用するか」のルール（=戦略）が違います。代表的な3つを押さえておくと、転職や案件参画のときに迷いません。
+
+![ブランチ戦略の3パターン比較図](images/branch-strategies.png)
+
+> 💡 **ブランチ戦略 = 「料理屋の仕込みルール」**
+> 同じラーメン屋でも、スープを朝まとめて仕込む店、注文ごとに作る店、毎日継ぎ足す店があります。ブランチ戦略も「いつ・どう main にまとめるか」のルールの違いです。
+
+| 戦略 | イメージ | 向いている現場 |
+|------|---------|---------------|
+| **GitHub Flow** | main + feature ブランチだけ。PR を出してマージしたらすぐ本番。 | スタートアップ、Webサービス、本講座 |
+| **Git Flow** | main / develop / feature / release / hotfix と階層が多い。リリース日が決まっている。 | 大規模システム、銀行、組み込み |
+| **Trunk-Based Development** | ほぼ main に直接コミット。ブランチは1日以内で消す。 | 上級者チーム、CI/CD が強い現場 |
+
+**本講座で体験したのは GitHub Flow です。** まずはこれを身体で覚え、必要に応じて他の戦略を学ぶ順番でOK。
+
+---
+
+### 2. コードレビューとレビュアー指名
+
+PR は「マージ前に他人に見てもらう」ためのものです。チーム開発では「セルフマージ禁止（自分の PR を自分でマージしない）」が一般的なルールです。
+
+![コードレビューの流れ](images/code-review-flow.png)
+
+> 💡 **コードレビュー = 「設計図のダブルチェック」**
+> 建築現場で、設計図を一人だけで描いて発注すると、ミスに気づけません。だから先輩や別の担当者にチェックしてもらいますよね。コードレビューも同じです。「思い込みのバグ」「セキュリティの抜け」を他人の目で発見します。
+
+**よく使われる用語:**
+
+| 用語 | 意味 |
+|------|------|
+| **Reviewer（レビュアー）** | PR の右サイドバーで指名する「見てほしい人」 |
+| **Approve（承認）** | レビュアーが「これでOK」とハンコを押す操作 |
+| **Request changes** | 「ここ直して」と修正依頼を出す操作 |
+| **LGTM** | "Looks Good To Me" の略。コメントで「OK」を表す合言葉 |
+| **nits / nit:** | "nitpick"（重箱の隅）の略。「直さなくてもいいけどできれば」レベルの指摘 |
+
+**指摘するときのマナー:**
+- 「あなたは間違っている」ではなく「コードがこう動くと思いますがどうでしょう？」
+- 良い箇所は積極的に褒める（"Nice!" "👍" を付けるだけでも雰囲気が変わる）
+
+---
+
+### 3. main ブランチを守る仕組み（protected branch / CODEOWNERS）
+
+「main に直接 push しない」というルールを口頭で決めても、人は間違えます。GitHub には**強制的にルールを守らせる機能**があります。
+
+![protected branch の概念図](images/protected-branch.png)
+
+> 💡 **protected branch = 「金庫の扉」**
+> 大事な書類を保管する金庫には、複数人の暗証番号がそろわないと開かない仕組みがありますよね。protected branch も同じで、「PR 経由でないと main に変更を入れられない」ように扉をロックします。
+
+**設定できる代表的なルール:**
+- ❌ main への直接 push を禁止
+- ✅ PR を経由しないとマージできない
+- ✅ レビュアーの承認が N 人以上ないとマージできない
+- ✅ CI（自動テスト）が通らないとマージできない
+- ❌ force push を禁止（Claude Code がブロックしてくれるのと同じ仕組み）
+
+**CODEOWNERS ファイル:**
+リポジトリのルートに `.github/CODEOWNERS` というファイルを置くと、「このフォルダを変更する PR には必ずこの人をレビュアーに自動指名する」という設定ができます。
+
+```
+# .github/CODEOWNERS の例
+/src/payment/   @senior-engineer
+/docs/          @tech-writer
+```
+
+「お金関係のコードを変えたら必ずシニアエンジニアがレビューする」というルールを、忘れずに自動適用できます。
+
+---
+
+### 4. コンフリクトの解消
+
+![コンフリクト解消の概念図](images/conflict-resolution.png)
+
+> 💡 **コンフリクト = 「同じ書類を2人が別の内容で書き換えた」**
+> Aさんが「会議は10時から」、Bさんが「会議は11時から」と同じ書類を書き換えてしまったら、どちらを採用するか人間が判断するしかないですよね。Git のコンフリクトも同じで、Git が自動で判断できない箇所を人間が選びます。
+
+**コンフリクトが起きるとファイルに以下のようなマーカーが入ります:**
+
+```
+<<<<<<< HEAD（自分の変更）
+const message = "こんにちは";
+=======
+const message = "Hello";
+>>>>>>> main（相手の変更）
+```
+
+**解消の手順:**
+1. `<<<<<<<`, `=======`, `>>>>>>>` のマーカーを全部消す
+2. 残す内容を決めて手で書き直す（両方残す / どちらか / 新しい内容に書き換える）
+3. ステージング → コミット
+
+**講座的な裏技:** VSCode はコンフリクト箇所に「Accept Current / Accept Incoming / Accept Both」ボタンを出してくれるのでクリックで選べます。さらに **Claude Code に「コンフリクトを解消して」と頼めば、文脈を読んで適切に解消してくれます。**
+
+---
+
+### 5. マージの3つの方式（Merge / Squash / Rebase）
+
+PR をマージするとき、GitHub では3つの方式が選べます。
+
+![マージの3方式比較](images/merge-three-ways.png)
+
+> 💡 **3方式 = 「書類のまとめ方の違い」**
+> 出張で集めた領収書を経理に出すとき、「全部そのまま提出」「1枚にまとめて提出」「日付順に並べ替えて提出」の3パターンがありますよね。マージ方式も「ブランチの履歴をどう main に取り込むか」の違いです。
+
+| 方式 | 何が起きるか | 向いているケース |
+|------|------------|----------------|
+| **Merge commit**（標準） | ブランチの履歴を全部残し、「マージしました」という1コミットを追加 | 履歴を全部残したい / Git Flow |
+| **Squash and merge** | ブランチの複数コミットを**1つにまとめて** main に追加 | コミットが細かすぎる / GitHub Flow で人気 |
+| **Rebase and merge** | マージコミットを作らず、コミットを**main の続きに並べ直す** | 履歴を直線にしたい上級者向け |
+
+**初心者向けの結論:** チームのデフォルト設定（多くは Squash and merge）に従えばOK。自分で選ぶ場面が来たら、上司や README の指示に従いましょう。
+
+> ⚠️ **rebase の注意点**
+> 「既に push したブランチ」を rebase すると force push が必要になり、他人の作業を壊す危険があります。force push は Claude Code が自動でブロックしますが、手動でやる場合は要注意です。
+
+---
+
 ## まとめ（10分）
 
 ### 今日できるようになったこと
@@ -358,6 +486,7 @@ Claude Code には Git 操作で危険なことをしないための安全機構
 - [ ] ブランチを作成して、main を壊さずに新機能を試せた
 - [ ] GitHub で Pull Request を作成してマージできた
 - [ ] Claude Code に任せると同じ操作が1つの指示で完了することを体験した
+- [ ] チーム開発の作法（ブランチ戦略・コードレビュー・protected branch・コンフリクト解消・マージ方式）の言葉がわかるようになった
 
 ### 手動操作と Claude Code の使い分け
 
@@ -418,3 +547,15 @@ Claude Code には Git 操作で危険なことをしないための安全機構
 | /commit | Claude Code のコミットメッセージ自動生成スキル |
 | CLI | 文字を打って命令する操作方式 |
 | GUI | ボタンをクリックして操作する方式 |
+| GitHub Flow | main + feature ブランチだけのシンプルな戦略（本講座で体験） |
+| Git Flow | develop/release/hotfix を分ける大規模向け戦略 |
+| Trunk-Based Development | 短命ブランチで main に高速に取り込む上級戦略 |
+| コードレビュー | 他人の目で変更内容をチェックする工程 |
+| Reviewer | PR を確認してほしい人として指名された相手 |
+| Approve | レビュアーが「OK」と承認する操作 |
+| LGTM | "Looks Good To Me"（いいと思います）の略語 |
+| protected branch | main 等を保護して直接 push やマージを制限する仕組み |
+| CODEOWNERS | 特定フォルダの変更時に自動でレビュアーを指名する設定ファイル |
+| Squash and merge | PR の複数コミットを1つにまとめて main に取り込む方式 |
+| Rebase | コミットを並べ替えて履歴を直線にする操作 |
+| マージコミット | ブランチを取り込んだことを示す合流地点のコミット |
