@@ -246,10 +246,6 @@ VSCode の画面操作だけで「ブランチ作成 → コード変更 → コ
 
 1. ブラウザで GitHub のリポジトリページ（`https://github.com/自分のユーザー名/todo-app`）にアクセス
 2. ページ上部に「Compare & pull request」という黄色いバナーが表示されている
-
-![Compare & pull requestバナー](screenshots/E10_github_pr_banner.png)
-*push 直後に表示される黄色いバナー。これをクリックして PR を作成します*
-
 3. 「Compare & pull request」をクリック
 4. PR タイトルに「フッターを追加」と入力
 5. 説明欄に「ページ下部に作成者名と作成日を表示するフッターを追加しました」と入力
@@ -319,9 +315,6 @@ Claude Code が自動で以下を実行する様子を観察してください:
 5. Pull Request を作成
 
 Step 1-4 で手動で行った全ての操作が、1つの指示で完了します。
-
-![Claude Code自動PR作成](screenshots/E14_claude_code_auto_pr.png)
-*Claude Code が自動でブランチ作成から PR 作成まで実行した様子*
 
 **5-3. /commit スキルの紹介**
 
