@@ -27,8 +27,10 @@
 │                                                   │
 │  応用（単発）※基本コース修了者向け                   │
 │    応用1: VSCode で Git/GitHub 入門                │
-│    応用2: Google Drive MCP セキュリティ入門         │
+│    応用2: Google Drive / Sheets セキュリティ入門    │
 │    応用3: Claude Code で GAS 開発入門（Clasp）     │
+│    応用4: SNS マーケ API 連携入門                  │
+│    応用5: 請求データ自動収集 × Live Artifact       │
 │    Skills 入門 / etc.                              │
 ├─────────────────────────────────────────────────┤
 │  MENTA（伴走型メンター）                            │
@@ -216,32 +218,34 @@ MENTA 伴走プラン（月額 15,000〜30,000円）
 
 ---
 
-### 応用2: Claude × Google Drive セキュリティ入門（90分）
+### 応用2: Google Drive / スプレッドシート セキュリティ入門（90分）
 
-**前提**: Claude.ai を業務で使い始めた人（基本コース修了者が望ましい）
+**前提**: 基本コース第1回修了（Claude Code が動く環境がある）、macOS 推奨
 
-**ゴール**: Claude.ai の Google Drive コネクタを安全に使う方法を理解し、3 層セキュリティモデルを実践する
+**ゴール**: Claude Code から gog CLI を使って Google Drive / Sheets を安全に読み書きできるようになり、OAuth 認証の仕組みと「自分で鍵を管理する」運用責任を理解する
 
 **講義（20分）**
-- Claude.ai コネクタの仕組みと Google Drive の仕様（読み取り専用）
-- データの扱い（Anthropic サーバーで処理、モデル学習には不使用）
-- セキュリティ 3 層防御モデル（Google 権限 / Incognito チャット / 組織管理）
+- Claude.ai コネクタと Claude Code の違い（コネクタは Claude Code からは使えない）
+- gog CLI とは — Google Workspace 用 OSS コマンドラインツール
+- OAuth 2.0 の仕組み（クライアント / スコープ / リフレッシュトークン）
+- セキュリティ 3 層（スコープ / Google 権限管理 / 組織 Workspace Admin）
 
-**ハンズオン（55分）**
-- Google Drive コネクタの接続（ワンクリック）
-- 読み取りテスト（検索・要約）と削除不可の確認
-- Google アカウントの権限管理（myaccount.google.com）
-- Incognito チャットで機密ファイルを安全に扱う
-- 補足: Sheets 編集が必要な場合の gog CLI 紹介
+**ハンズオン（60分）**
+- Homebrew で gog CLI をインストール（5分）
+- Google Cloud Console で OAuth クライアントを作成（20分）
+- gog CLI の認証とスコープ指定（10分）
+- Drive 検索・読み取り（10分）
+- Sheets への書き込み・更新と `--dry-run` による安全運用（10分）
+- 権限の確認と取り消し方法（5分）
 
-**まとめ（10分）**
+**まとめ（5分）**
 
 **Notion 教材（自習用・辞書）**
-- Claude.ai コネクタ設定ガイド
+- gog CLI コマンドチートシート
+- Google Cloud Console OAuth セットアップガイド
 - 「やっていいこと・ダメなこと」チェックリスト
-- Incognito チャット活用ガイド
-- IT 部門への相談テンプレート
-- Google Workspace 管理者向けセキュリティガイド（管理職向け）
+- IT 部門への相談テンプレート（gog CLI 利用許可）
+- OAuth クライアント JSON 漏洩時の緊急対応手順
 
 ---
 
@@ -279,6 +283,78 @@ MENTA 伴走プラン（月額 15,000〜30,000円）
 - `.clasp.json` / `appsscript.json` の読み方
 - GAS 指示文テンプレート10選
 - 会社利用時の IT 部門相談テンプレート
+
+---
+
+### 応用4: Claude Code で SNS マーケ API 連携入門（90分）
+
+**ゴール**: MCP / Agent Skills / API 直叩きの3方式を使い分けて、GA4・Shopify・X・ニュース RSS から数値を取得し、Google スプレッドシートに自動転記できるようになる。題材は「週次マーケ KPI レポート自動生成」
+
+**講義（15分）**
+- MCP / Agent Skills / API の使い分けと意思決定フロー
+- 認証の3類型（API キー / OAuth 2.0 / Service Account）
+- レート制限と「やっていい使い方」（自社データのみ・第三者収集 NG）
+
+**ハンズオン（60分）**
+- Step 1: Claude Code 自身に各サービスの連携手段を調べさせる
+- Step 2: 採用する連携方式の意思決定（MCP > Skills > API / RSS）
+- Step 3-A: Shopify 公式 Dev MCP を 1 コマンドで導入
+- Step 3-B: GA4 公式 MCP + Service Account で実データ取得（本命）
+- Step 3-C: `openclaw-xurl` スキル導入と X API 認証（実取得は任意）
+- Step 4: 取得値をローカル CSV に書き出し → Claude.ai デスクトップの Drive コネクタで Sheets にアップロード
+- Step 5: 公式 RSS フィードから業界ニュースを取得 → 同様に Sheets に追加
+
+**まとめ（10分）**
+- 定期実行（GAS トリガーと組み合わせる構成）
+- Shopify / Instagram 実データ取得の応用テーマ案内
+- セキュリティ確認（Service Account 鍵 / `~/.xurl` / `.env` 管理）
+
+**Notion 教材（自習用・辞書）**
+- Shopify 実データ取得編（Custom App 作成 → Admin GraphQL）
+- Instagram 実データ取得編（Porter MCP / Graph API v22）
+- GA4 Service Account セットアップ完全ガイド（GCP 画面付き）
+- xurl スキル完全リファレンス
+- Google News RSS クエリ修飾子チートシート
+- ライセンス注意点（Bloomberg / Reuters / 日経 / TechCrunch）
+- 「会社で使う」前の IT 部門相談テンプレート
+
+---
+
+### 応用5: Claude Code で作る請求データ自動収集 × Live Artifact ダッシュボード（90分）
+
+**前提**: 基本コース第1〜2回修了（Node.js / Claude Code が動く）、応用3 か Clasp の経験があると有利。Claude.ai Pro / Max / Team / Enterprise プラン必須。invox 連携は本編対象外（拡張ガイドあり）。
+
+**ゴール**: Kintone から API でデータを取得し、毎朝 6 時に Google スプレッドシートを自動更新する GAS を Claude Code に書かせ、その台帳を Claude.ai デスクトップの **Live Artifact** でダッシュボード化し、**自分のブックマークから毎朝開ける状態にし、社内共有の代替手段（スクショ / PDF / Sheets URL）を選べる** ようになる。題材は「請求ダッシュボード（月次請求額 / 取引先別 / 支払予定 / 滞納アラート）」
+
+**講義（15分）**
+- アーキテクチャ全体像（Kintone → GAS → Sheets → Live Artifact）
+- API トークン認証 vs OAuth 2.0
+- Live Artifact とは（通常 Artifact との違い、MCP コネクタ連携、Pro 以上必須）
+
+**ハンズオン（65分）**
+- Part 1: GAS でデータ収集（45分）
+  - Step 1: Kintone「請求案件」アプリ作成 + API トークン発行
+  - Step 2: GAS プロジェクトを Clasp で作成 + スクリプトプロパティ登録
+  - Step 3: Claude Code で 6 ファイル分割の GAS を生成 + clasp push + 動作確認
+  - Step 4: 毎朝 6 時の時間トリガー設定 + Slack 通知
+- Part 2: Live Artifact 化（20分）
+  - Step 5: Claude.ai に Google Sheets MCP コネクタを接続
+  - Step 6: ダッシュボード生成 → Live Artifact 化
+  - Step 7: ローカル運用 + 社内共有の代替手段（スクショ / PDF / Sheets URL）
+
+**まとめ（5分）**
+- 運用ルール（5か条）— トリガー監視 / 鍵ローテーション / Live Artifact は自分専用・Sheets URL で代替共有 / Sheets バックアップ / 失敗時通知
+- 拡張先の選択肢 — invox / freee / マネフォ / Shopify / GA4 などへの横展開
+- 他応用編との接続 — 応用1（Git/GitHub）/ 応用2（Drive セキュリティ）/ 応用3（GAS）/ 応用4（API 連携）の集大成
+
+**Notion 教材（自習用・辞書）**
+- 配布スキル `kintone-api` リファレンス（query 文法・cursor API・エラーコード）
+- 配布スキル `gas-clasp` リファレンス（Critical Rules・templates.md・quotas.md）
+- 配布スキル `invox-api` リファレンス（OAuth 2.0 フロー・契約者向け）
+- invox 連携拡張ガイド（`references/invox-連携ガイド.md`）
+- スクリプトプロパティ管理チートシート
+- **Live Artifact のローカル運用と社内共有の代替手段チートシート（スクショ / PDF / Sheets URL）**
+- 横展開アイデア集（在庫管理 / 受注 / 勤怠 / KPI 等）
 
 ---
 
@@ -335,6 +411,7 @@ MENTA 伴走プラン（月額 15,000〜30,000円）
 | AI×財務管理 | PL自動生成、予実管理、キャッシュフロー予測 |
 | AI×タスク管理 | Backlog/GitHub連携、日次ブリーフィング自動化 |
 | AI×資料作成 | 提案書PPTX、操作マニュアルPDF、契約書レビュー |
+| AI×SNSマーケ | GA4 / Shopify / X / ニュースRSS 連携、週次KPI自動レポート |
 | 管理職向けDX推進 | AI導入の意思決定フレームワーク、ROI算出 |
 
 ### 法人研修パッケージ
